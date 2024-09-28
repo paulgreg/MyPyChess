@@ -1,33 +1,30 @@
+from display import display
+from input import input_move
+from move import execute_move
 import numpy as np
 
-board = np.array([
-    ['♜','♞','♝','♛','♚','♝','♞','♜'],
-    ['♟','♟','♟','♟','♟','♟','♟','♟',],
-    ['','','','','','','',''],
-    ['','','','','','','',''],
-    ['','','','','','','',''],
-    ['','','','','','','',''],
-    ['♙','♙','♙','♙','♙','♙','♙','♙'],
+initial_board = np.array([
     ['♖','♘','♗','♕','♔','♗','♘','♖'],
+    ['♙','♙','♙','♙','♙','♙','♙','♙'],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['','','','','','','',''],
+    ['♟','♟','♟','♟','♟','♟','♟','♟',],
+    ['♜','♞','♝','♛','♚','♝','♞','♜'],
 ])
+board = initial_board.copy()
 
-WHITE_ON_BLACK = '\033[30m\033[47m'
-BLACK_ON_WHITE = '\033[37m\033[40m'
-RESET_COLOR = '\033[0m'
+# 1. e4 e5 2. Cf3 Cf6 3. Cxe5 Cxe4 4. Df3 Cc5 5. Dxf7
+# moves = ['♞b1c3', '♙d7d6']
 
-def display_board() -> None:
-  print('┌──────────────────────────┐') 
-  c = 0
-  for i, row in enumerate(board):
-    print('│ ', end='')
-    for j, piece in enumerate(row):
-        color = WHITE_ON_BLACK if c % 2 == 0 else BLACK_ON_WHITE
-        char = piece if piece else ' '
-        print(f'{color} {char} {RESET_COLOR}', end='')
-        c += 1
-    c += 1
-    print(' │')
-  print('└──────────────────────────┘')
-
-display_board()
-
+while True:
+  display(board)
+  try:
+    move = input_move()
+    board = execute_move(board, move)
+  except Exception as e:
+    if (str(e) == 'restart'):
+      board = initial_board.copy()
+    else: 
+      print(e)
